@@ -2,7 +2,23 @@ import React, { useState, useEffect } from 'react';
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 import { useParams } from 'react-router-dom';
 import { ref, onValue } from 'firebase/database';
-import database from './firebase_creds.js';
+
+import { initializeApp } from "firebase/app";
+import { getDatabase } from "firebase/database";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBUdZ6OQrGpicPb8RVe-qxVMXwiB1ueO9c",
+  authDomain: "like-rightnow.firebaseapp.com",
+  projectId: "like-rightnow",
+  storageBucket: "like-rightnow.appspot.com",
+  messagingSenderId: "859028584233",
+  appId: "1:859028584233:web:b360f75593964b7c222938",
+  measurementId: "G-E0WEP4Q164"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const database = getDatabase(app);
 
 const SharedMapComponent = () => {
   const { shareId } = useParams();
