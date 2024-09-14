@@ -1,0 +1,104 @@
+.shareButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 0;
+  height: 30px;
+}
+
+.shareButton.friendsOnly {
+  background: none;
+}
+
+.shareButton.openInvite {
+  background: none;
+  color: #007AFF;
+  font-size: 14px;
+  font-weight: normal;
+}
+
+.iMessageContainer, .openInviteContainer {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.iMessageIcon {
+  width: 30px;
+  height: 30px;
+  transition: all 0.3s ease;
+  animation: pulse 2s infinite;
+}
+
+.sparkle {
+  position: absolute;
+  font-size: 14px;
+  animation: sparkle 2s infinite;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.shareButton:hover .sparkle {
+  opacity: 1;
+}
+
+.topLeft {
+  top: -10px;
+  left: -10px;
+}
+
+.bottomRight {
+  bottom: -10px;
+  right: -10px;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.15);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes sparkle {
+  0%, 100% {
+    opacity: 0.5;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+.buttonText {
+  margin-right: 8px;
+  line-height: 1;
+  animation: pulse 2s infinite;
+}
+
+.shareArrow {
+  width: 14px;
+  height: 14px;
+  animation: pulse 2s infinite;
+}
+
+.shareArrow path {
+  stroke: currentColor;
+}
+
+/* Make sure the open invite button is visible */
+.openInvite .buttonText,
+.openInvite .shareArrow {
+  color: #007AFF;
+  opacity: 1;
+}

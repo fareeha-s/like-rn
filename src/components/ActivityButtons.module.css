@@ -1,0 +1,86 @@
+.buttonContainer {
+  position: relative;
+  display: flex;
+  background-color: rgba(255, 255, 255, 0.2); /* Slightly transparent background */
+  backdrop-filter: blur(10px); /* Apply blur effect */
+  -webkit-backdrop-filter: blur(10px); /* For Safari support */
+  border-radius: 20px;
+  padding: 1px;
+  width: 240px; /* Match the width of friends/open invite toggle */
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+.activityButton {
+  flex: 1;
+  padding: 2px 16px; /* Reduced vertical padding to match friends/open invite */
+  border: none;
+  background: none;
+  color: white; /* White text for all states */
+  font-size: 14px;
+  font-weight: normal; /* Ensure non-active buttons have normal font weight */
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
+  transition: color 0.3s ease, font-weight 0.3s ease; /* Add transition for smooth change */
+  white-space: nowrap;
+}
+
+.activityButton:hover:not(.active) {
+  background-color: rgba(255, 255, 255, 0.1); /* Subtle hover effect for unselected */
+}
+
+.slider {
+  position: absolute;
+  top: 1px;
+  left: 1px;
+  bottom: 1px;
+  width: calc(50% - 1px);
+  background-color: #34776B;
+  border-radius: 18px;
+  transition: transform 0.3s ease;
+}
+
+.run .slider {
+  transform: translateX(0);
+}
+
+.walk .slider {
+  transform: translateX(calc(100% - 1px));
+}
+
+.activityButton.active {
+  text-shadow: 0 0 2px rgba(0, 0, 0, 0.5); /* Subtle shadow for active text */
+  font-weight: bold; /* Make active button bold */
+}
+
+/* Enhanced styles for better contrast */
+.activityButton:not(.active) {
+  text-shadow: 0 0 2px rgba(0, 0, 0, 0.3); /* Lighter shadow for inactive text */
+}
+
+.timingButton {
+  background-color: rgba(255, 255, 255, 0.3); /* Increased opacity from 0.2 to 0.3 */
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 10px 20px;
+  margin: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.timingButton:hover {
+  background-color: rgba(255, 255, 255, 0.4); /* Increased opacity for hover state */
+}
+
+.timingButton.selected {
+  background-color: rgba(255, 255, 255, 0.5); /* Even more opaque for selected state */
+  font-weight: bold;
+}
+
+.buttonText {
+  position: relative;
+  z-index: 2;
+}

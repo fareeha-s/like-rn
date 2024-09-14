@@ -1,3 +1,18 @@
+body, html {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+}
+
+body, button, input, select, textarea {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.app-container {
+  height: 100vh;
+  width: 100vw;
+}
+
 .App {
   text-align: center;
 }
@@ -35,4 +50,39 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.currentLocationButton {
+  position: absolute;
+  right: 10px;
+  bottom: 120px; /* Adjust based on your layout */
+  width: 40px;
+  height: 40px;
+  background-color: white;
+  border: none;
+  border-radius: 50%;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s;
+}
+
+.currentLocationButton:hover {
+  background-color: #f1f1f1;
+}
+
+.currentLocationButton:active {
+  background-color: #e1e1e1;
+}
+
+.currentLocationIcon {
+  width: 24px;
+  height: 24px;
+  fill: #666;
 }
