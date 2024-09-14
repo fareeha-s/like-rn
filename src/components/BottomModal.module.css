@@ -168,9 +168,9 @@
 
 .privacyAndShareContainer {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  width: 100%;
+  justify-content: space-between;
+  margin-top: 10px;
 }
 
 .dragHandle {
@@ -210,20 +210,29 @@
   z-index: 1000;
 }
 
+.darkGreenBackground {
+  background-color: rgba(0, 100, 0, 0.9); /* Dark green with some transparency */
+}
+
 .shareModal {
-  background-color: white;
+  background-color: transparent; /* Make the inner container transparent */
   padding: 20px;
   border-radius: 10px;
   max-width: 80%;
   width: 300px;
+  position: relative;
+  padding-bottom: 60px; /* Make room for the button at the bottom */
 }
 
 .closeButton {
-  float: right;
+  position: absolute;
+  top: 10px;
+  right: 10px;
   background: none;
   border: none;
-  font-size: 20px;
+  font-size: 24px;
   cursor: pointer;
+  color: white;
 }
 
 .shareMessagePreview {
@@ -233,43 +242,23 @@
   border-radius: 5px;
 }
 
-.shareButtons {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 10px;
+.shareButtonContainer {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
 }
 
-.messagesButton {
+.shareButton {
   background: none;
   border: none;
   cursor: pointer;
   padding: 0;
 }
 
-.moreOptionsButton {
-  padding: 10px;
-  background-color: #f0f0f0;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.additionalShareOptions {
-  margin-top: 10px;
-  padding: 10px;
-  background-color: #f0f0f0;
-  border-radius: 5px;
-}
-
-.shareButton {
-  cursor: pointer;
-  border-radius: 13px;
-  width: 50px;
-  height: 50px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
+.shareIcon {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
 }
 
 .smsButton {
@@ -331,4 +320,102 @@
 
 .additionalShareOptions {
   /* Style for the container of additional sharing options */
+}
+
+.durationSliderContainer {
+  display: flex;
+  align-items: center;
+  width: 100px;
+  margin: 0 10px;
+}
+
+.durationSlider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 4px;
+  border-radius: 2px;
+  background: #d3d3d3;
+  outline: none;
+  opacity: 0.7;
+  transition: opacity .2s;
+}
+
+.durationSlider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #007AFF;
+  cursor: pointer;
+}
+
+.durationSlider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #007AFF;
+  cursor: pointer;
+}
+
+.durationDisplay {
+  margin-left: 5px;
+  font-size: 12px;
+  color: #007AFF;
+}
+
+.infoSliderContainer {
+  position: relative;
+  width: 50px;
+  margin-left: 10px;
+}
+
+.infoSlider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.3);
+  outline: none;
+  opacity: 0.7;
+  transition: opacity .2s;
+}
+
+.infoSlider:hover {
+  opacity: 1;
+}
+
+.infoSlider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: white;
+  cursor: pointer;
+}
+
+.infoSlider::-moz-range-thumb {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: white;
+  cursor: pointer;
+}
+
+.infoTooltip {
+  position: absolute;
+  bottom: 100%;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 12px;
+  max-width: 200px;
+  z-index: 1000;
+  margin-bottom: 10px;
+}
+
+.infoTooltip p {
+  margin: 5px 0;
 }

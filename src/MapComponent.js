@@ -3,8 +3,9 @@ import { GoogleMap, LoadScript, Marker, OverlayView } from '@react-google-maps/a
 import { SearchBar } from './components/SearchBar';
 import ActivityButtons from './components/ActivityButtons';
 import BottomModal from './components/BottomModal';
-import database from './firebase';
-import { ref, set, get } from "firebase/database";
+import { getFirebaseDatabase } from './firebase';
+import { ref, set, onValue } from "firebase/database";
+import DurationSelector from './components/DurationSelector';
 
 const mapContainerStyle = {
   width: '100%',
@@ -32,9 +33,23 @@ const MapComponent = () => {
   const [markerPosition, setMarkerPosition] = useState(null);
   const [showLabel, setShowLabel] = useState(true);
   const [activityType, setActivityType] = useState('run');
-  const [showPinLabel, setShowPinLabel] = useState(false);
+  const [showPinLabel, setShowPinLabel] = useState(true);
 
   const mapRef = useRef(null);
+
+  useEffect(() => {
+    const database = getFirebaseDatabase();
+    if (database) {
+      const pinRef = ref(database, 'pin');
+      onValue(pinRef, (snapshot) => {
+        const data = snapshot.val();
+        if (data) {
+          setMarkerPosition(data);
+          setShowPinLabel(false);
+        }
+      });
+    }
+  }, []);
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -45,7 +60,7 @@ const MapComponent = () => {
             lng: position.coords.longitude
           };
           setCenter(pos);
-          updatePinPosition(pos, true);  // Pass true for initial position
+          updatePinPosition(pos);
         },
         () => {
           console.log("Error: The Geolocation service failed.");
@@ -56,37 +71,40 @@ const MapComponent = () => {
     }
   }, []);
 
+  useEffect(() => {
+    if (markerPosition) {
+      setTimeout(() => setShowPinLabel(true), 500);
+    }
+  }, [markerPosition]);
+
   const handleMapClick = (event) => {
     const newPosition = {
       lat: event.latLng.lat(),
       lng: event.latLng.lng()
     };
-    updatePinPosition(newPosition, false);
+    updatePinPosition(newPosition);
   };
 
   const handleMarkerDragEnd = (e) => {
     const newPosition = { lat: e.latLng.lat(), lng: e.latLng.lng() };
-    updatePinPosition(newPosition, false);
+    updatePinPosition(newPosition);
   };
 
-  const updatePinPosition = (newPosition, isInitialPosition = false) => {
-    setMarkerPosition(newPosition);
-    if (!isInitialPosition) {
-      setShowLabel(false);
+  const updatePinPosition = (position) => {
+    setMarkerPosition(position);
+    setShowPinLabel(false);
+    const database = getFirebaseDatabase();
+    if (database) {
+      const pinRef = ref(database, 'pin');
+      set(pinRef, position).catch(error => {
+        console.error("Error updating pin position:", error);
+      });
+    } else {
+      console.error("Firebase database is not initialized");
     }
-    
-    const mapLink = generateMapLink(newPosition.lat, newPosition.lng);
-    
-    // Update Firebase with the new map link
-    const userId = 'user1'; // In a real app, this would be the logged-in user's ID
-    set(ref(database, `users/${userId}/startLocationLink`), mapLink)
-      .then(() => console.log("Start location link updated in Firebase"))
-      .catch((error) => console.error("Error updating start location link: ", error));
-
-    console.log("Map clicked/marker dragged, new position:", newPosition);
   };
 
-  const PinLabel = () => (
+  const PinLabel = ({ showText }) => (
     <div style={{
       color: 'white',
       fontSize: '16px',
@@ -98,10 +116,10 @@ const MapComponent = () => {
       left: '50%',
       transform: 'translateX(-50%)',
       whiteSpace: 'nowrap',
-      opacity: showPinLabel ? 1 : 0,
+      opacity: 1,
       transition: 'opacity 0.5s ease-in-out',
     }}>
-      pin your start point
+      meet here  {showText }
     </div>
   );
 
@@ -114,7 +132,7 @@ const MapComponent = () => {
             lng: position.coords.longitude
           };
           setCenter(pos);
-          updatePinPosition(pos, true);
+          updatePinPosition(pos);
           if (mapRef.current) {
             mapRef.current.panTo(pos);
             mapRef.current.setZoom(18);
@@ -131,6 +149,11 @@ const MapComponent = () => {
 
   console.log("Rendering map, marker position:", markerPosition);
 
+  const handleDurationSelect = (duration) => {
+    console.log('Selected duration:', duration);
+    // You can add more logic here if needed
+  };
+
   return (
     <div style={{ position: 'relative', height: '100vh', width: '100%' }}>
       <style>{globalStyle}</style>
@@ -146,7 +169,7 @@ const MapComponent = () => {
           options={{
             mapTypeId: 'satellite',
             disableDefaultUI: true,
-            tilt: 0,  // This is the only new line
+            tilt: 0,
             zoomControl: false,
             mapTypeControl: false,
             scaleControl: false,
@@ -165,14 +188,12 @@ const MapComponent = () => {
                 draggable={true} 
                 onDragEnd={handleMarkerDragEnd} 
               />
-              {showLabel && (
-                <OverlayView
-                  position={markerPosition}
-                  mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
-                >
-                  <PinLabel />
-                </OverlayView>
-              )}
+              <OverlayView
+                position={markerPosition}
+                mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
+              >
+                <PinLabel showText={showPinLabel} />
+              </OverlayView>
             </>
           )}
         </GoogleMap>
@@ -190,7 +211,7 @@ const MapComponent = () => {
           <SearchBar setCenter={setCenter} setZoom={setZoom} />
         </div>
         
-        {/* Activity type buttons - Repositioned and restyled */}
+        {/* Activity type buttons and Duration Selector */}
         <div style={{
           position: 'absolute',
           top: '80px',
@@ -199,10 +220,14 @@ const MapComponent = () => {
           zIndex: 10,
           display: 'flex',
           justifyContent: 'center',
+          alignItems: 'center',
           width: '100%',
-          maxWidth: '300px', // Adjust as needed
+          maxWidth: '400px',
         }}>
           <ActivityButtons activityType={activityType} setActivityType={setActivityType} />
+          <div style={{ marginLeft: '10px' }}>
+            <DurationSelector onDurationSelect={handleDurationSelect} />
+          </div>
         </div>
 
         {/* Bottom Modal */}
@@ -225,7 +250,7 @@ const MapComponent = () => {
             position: 'absolute',
             top: '20px',
             right: '20px',
-            zIndex: 10,
+            zIndex: 1000,
             background: 'rgba(255, 255, 255, 0.8)', // Increased transparency
             border: 'none',
             borderRadius: '50%',
@@ -242,7 +267,7 @@ const MapComponent = () => {
           onMouseLeave={(e) => e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.8)'} // Back to original transparency
         >
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-            <path d="M12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm8.94 3c-.46-4.17-3.77-7.48-7.94-7.94V1h-2v2.06C6.83 3.52 3.52 6.83 3.06 11H1v2h2.06c.46 4.17 3.77 7.48 7.94 7.94V23h2v-2.06c4.17-.46 7.48-3.77 7.94-7.94H23v-2h-2.06zM12 19c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z" fill="#1a73e8"/>
+            <path d="M12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm8.94 3c-.46-4.17-3.77-7.48-7.94-7.94V1h-2v2.06C6.83 3.52 3.52 6.83 3.06 11H1v2h2.06c.46 4.17 3.77 7.48 7.94 7.94V23h2v-2.06zM12 19c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z" fill="#1a73e8"/>
           </svg>
         </button>
       </LoadScript>

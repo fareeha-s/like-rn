@@ -1,20 +1,20 @@
 import React from 'react';
 import styles from './ActivityButtons.module.css';
-import database from '../firebase'; // Changed this line
+import { getFirebaseDatabase } from '../firebase'; // Changed this line
 import { ref, set } from "firebase/database";
 
 const ActivityButtons = ({ activityType, setActivityType }) => {
-  const handleActivityChange = (type) => {
-    setActivityType(type);
-
-    // Update Firebase
-    const userId = 'user1'; // In a real app, this would be the logged-in user's ID
-    set(ref(database, 'users/' + userId), {  // Changed this line
-      name: 'User 1', // This would be the actual user's name
-      currentActivity: type
-    }).catch(error => {
-      console.error("Error updating activity: ", error);
-    });
+  const handleActivityChange = (newActivityType) => {
+    setActivityType(newActivityType);
+    const database = getFirebaseDatabase();
+    if (database) {
+      const activityRef = ref(database, 'activity');
+      set(activityRef, newActivityType).catch(error => {
+        console.error("Error updating activity type:", error);
+      });
+    } else {
+      console.error("Firebase database is not initialized");
+    }
   };
 
   return (

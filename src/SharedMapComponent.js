@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 import { useParams } from 'react-router-dom';
 import { ref, onValue } from 'firebase/database';
-import database from './firebase.js';
+import { getFirebaseDatabase } from './firebase';
 
 const SharedMapComponent = () => {
   const { shareId } = useParams();
@@ -11,7 +11,7 @@ const SharedMapComponent = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const shareRef = ref(database, `shares/${shareId}`);
+    const shareRef = ref(getFirebaseDatabase(), `shares/${shareId}`);
     const unsubscribe = onValue(shareRef, (snapshot) => {
       setIsLoading(false);
       const data = snapshot.val();
