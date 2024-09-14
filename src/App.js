@@ -4,6 +4,8 @@ import MapComponent from './MapComponent';
 import SharedMapComponent from './SharedMapComponent';
 import './index.css';
 
+console.log('App is running');
+
 function App() {
   return (
     <Router>
