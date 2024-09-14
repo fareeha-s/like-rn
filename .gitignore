@@ -57,3 +57,6 @@ firebaseConfig.js
 
 # Specific to your project structure
 # Add any other files or directories that might contain sensitive information
+
+# Add this line to .gitignore
+src/firebase_creds.js
