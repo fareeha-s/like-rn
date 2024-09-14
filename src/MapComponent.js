@@ -3,7 +3,7 @@ import { GoogleMap, LoadScript, Marker, OverlayView } from '@react-google-maps/a
 import { SearchBar } from './components/SearchBar';
 import ActivityButtons from './components/ActivityButtons';
 import BottomModal from './components/BottomModal';
-import database from '../firebase';
+import database from './firebase';
 import { ref, set, get } from "firebase/database";
 
 const mapContainerStyle = {
