@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 import { useParams } from 'react-router-dom';
 import { ref, onValue } from 'firebase/database';
-import database from './firebase.js';
+import database from '../firebase.js';
 
 const SharedMapComponent = () => {
   const { shareId } = useParams();

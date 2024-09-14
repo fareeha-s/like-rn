@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './ActivityButtons.module.css';
-import database from '../firebase'; // Changed this line
+import database from '../../firebase'; // Changed this line
 import { ref, set } from "firebase/database";
 
 const ActivityButtons = ({ activityType, setActivityType }) => {
