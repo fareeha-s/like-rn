@@ -86,11 +86,7 @@
   animation: pulse 2s infinite;
 }
 
-.shareArrow {
-  width: 16px;
-  height: 16px;
-  animation: pulse 2s infinite;
-}
+
 
 .shareArrow path {
   stroke: white;
@@ -158,4 +154,23 @@
 
 .shareActionButton:hover {
   background-color: #0056b3; /* Darker blue on hover */
+}
+
+.shareIcon {
+  width: 24px;  /* or appropriate size */
+  height: 24px;
+  display: inline-block;
+  position: relative;
+  z-index: 10; /* Adjust this value as needed */
+  /* other styles as needed */
+}
+
+.openInvite .shareIcon {
+  animation: pulse 2s infinite;
+}
+
+.shareButton.friendsOnly,
+.friendsOnly .friendsOnlyIcon,
+.friendsOnlyButton {
+  animation: pulse 2s infinite;
 }

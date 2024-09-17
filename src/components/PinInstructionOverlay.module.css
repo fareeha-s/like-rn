@@ -1,0 +1,75 @@
+.durationSelectorContainer {
+    display: flex;
+    align-items: center;
+    width: 160px;
+    margin-top: 0; /* Changed from 10px to 0 */
+  }
+  
+  .sliderContainer {
+    position: relative;
+    width: 120px; /* Reverted to original width */
+    height: 24px;
+    cursor: pointer;
+  }
+  
+  .sliderTrack {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.8); /* Increased opacity from 0.5 to 0.8 */
+    border-radius: 2px;
+  }
+  
+  .sliderThumb {
+    position: absolute;
+    top: 50%;
+    width: 40px;
+    height: 24px;
+    background-color: #2C3E50;
+    border-radius: 12px;
+    transform: translate(-50%, -50%);
+    transition: left 0.1s ease-in-out;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  
+  .thumbText {
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+  }
+  
+  .minsLabel {
+    color: white;
+    font-size: 12px;
+    margin-left: 16px; /* Increased from 8px to 16px */
+    white-space: nowrap; /* Ensures "mins" stays on one line */
+  }
+  
+  .overlayContainer {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-style: italic;
+    font-size: 18px;
+    opacity: 1;
+    transition: opacity 1s ease-in-out;
+    pointer-events: none;
+    z-index: 1000;
+  }
+  
+  .overlayText {
+    margin: 0;
+    white-space: nowrap;
+  }

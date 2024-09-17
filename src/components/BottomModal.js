@@ -3,7 +3,7 @@ import styles from './BottomModal.module.css';
 import ShareButton from './ShareButton';
 import { getDatabase, ref, push, serverTimestamp } from "firebase/database";
 
-const BottomModal = ({ activityType, markerPosition, onAnimationComplete }) => {
+const BottomModal = ({ activityType, markerPosition, onAnimationComplete, duration = 30 }) => {
   const [selectedTime, setSelectedTime] = useState('now');
   const [selectedPrivacy, setSelectedPrivacy] = useState('friends');
   const [laterTime, setLaterTime] = useState('');
@@ -118,11 +118,20 @@ const BottomModal = ({ activityType, markerPosition, onAnimationComplete }) => {
 
     const mapLink = `https://www.google.com/maps/search/?api=1&query=${markerPosition.lat},${markerPosition.lng}`;
     let shareMessage;
+    const durationText = duration !== undefined ? `${duration}-min ` : '';
 
-    if (selectedTime === 'now') {
-      shareMessage = `hey, about to head for a ${activityType}! come with: 📍${mapLink}`;
-    } else {
-      shareMessage = `hey, ${activityType} with me in 10 mins (${laterTime})? meet up here: 📍${mapLink}`;
+    if (selectedPrivacy === 'friends') {
+      if (selectedTime === 'now') {
+        shareMessage = `going for a ${durationText}${activityType} rn, come with? 📍${mapLink}`;
+      } else {
+        shareMessage = `${activityType}-ing for like ${durationText.trim()}, come with? meet here @ ${laterTime}: 📍${mapLink}`;
+      }
+    } else { // open invite
+      if (selectedTime === 'now') {
+        shareMessage = `heading for a ${durationText}${activityType}! dm me rn if you're around: 📍${mapLink}`;
+      } else {
+        shareMessage = `heading for a ${durationText}${activityType}! open invite, meet here @ ${laterTime}: 📍${mapLink}`;
+      }
     }
 
     // If "friends only" is selected, directly open the text messaging app
@@ -134,7 +143,7 @@ const BottomModal = ({ activityType, markerPosition, onAnimationComplete }) => {
       setShowShareModal(true);
     }
 
-    // Save to Firebase (if you still want to do this for both cases)
+    // Save to Firebase
     saveToFirebase(mapLink, selectedTime === 'now' ? 'right now' : `in 10 mins (${laterTime})`);
   };
 
@@ -177,14 +186,21 @@ const BottomModal = ({ activityType, markerPosition, onAnimationComplete }) => {
   const saveToFirebase = (mapLink, timeText) => {
     const db = getDatabase();
     const sharesRef = ref(db, 'shares');
-    push(sharesRef, {
+    const shareData = {
       activityType,
       location: { lat: markerPosition.lat, lng: markerPosition.lng },
       timestamp: serverTimestamp(),
       mapLink,
       shareTime: timeText,
       privacyOption: selectedPrivacy
-    }).catch(error => {
+    };
+
+    // Only add duration if it's defined
+    if (duration !== undefined) {
+      shareData.duration = duration;
+    }
+
+    push(sharesRef, shareData).catch(error => {
       console.error('Error saving share to Firebase:', error);
     });
   };

@@ -2,20 +2,14 @@ import React, { useState, useRef, useEffect } from 'react';
 import styles from './DurationSelector.module.css';
 
 const DurationSelector = ({ onDurationSelect }) => {
-  const [duration, setDuration] = useState(15);
+  const [duration, setDuration] = useState(30);  // Changed default to 30
   const sliderRef = useRef(null);
 
   useEffect(() => {
     onDurationSelect(duration);
   }, [duration, onDurationSelect]);
 
-  const handleMouseDown = (event) => {
-    event.preventDefault();
-    document.addEventListener('mousemove', handleMouseMove);
-    document.addEventListener('mouseup', handleMouseUp);
-  };
-
-  const handleMouseMove = (event) => {
+  const handleInteraction = (event) => {
     if (sliderRef.current) {
       const rect = sliderRef.current.getBoundingClientRect();
       const x = event.clientX - rect.left;
@@ -25,10 +19,20 @@ const DurationSelector = ({ onDurationSelect }) => {
       if (percentage <= 0.5) {
         newDuration = 15 + Math.round(percentage * 30 / 5) * 5;
       } else {
-        newDuration = 30 + Math.round((percentage - 0.5) * 30 / 5) * 5; // Changed to increment by 5 up to 45
+        newDuration = 30 + Math.round((percentage - 0.5) * 30 / 5) * 5;
       }
       setDuration(newDuration);
     }
+  };
+
+  const handleMouseDown = (event) => {
+    handleInteraction(event);
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
+  };
+
+  const handleMouseMove = (event) => {
+    handleInteraction(event);
   };
 
   const handleMouseUp = () => {
@@ -36,7 +40,11 @@ const DurationSelector = ({ onDurationSelect }) => {
     document.removeEventListener('mouseup', handleMouseUp);
   };
 
-  const thumbPosition = `${((duration - 15) / 30) * 100}%`; // Adjusted calculation for 15-45 range
+  const handleClick = (event) => {
+    handleInteraction(event);
+  };
+
+  const thumbPosition = `${((duration - 15) / 30) * 100}%`;  // Keep this calculation as is
 
   return (
     <div className={styles.durationSelectorContainer}>
@@ -44,6 +52,7 @@ const DurationSelector = ({ onDurationSelect }) => {
         className={styles.sliderContainer} 
         ref={sliderRef}
         onMouseDown={handleMouseDown}
+        onClick={handleClick}
       >
         <div className={styles.sliderTrack}></div>
         <div 
